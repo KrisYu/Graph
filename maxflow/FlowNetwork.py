@@ -33,26 +33,41 @@ class FlowNetwork(object):
         self.flow[edge] = 0
         self.flow[redge] = 0
 
-    def find_path(self, source, sink ,path):
-        if source == sink:
-            return path
-        for edge in self.get_edges(source):
-            residual = edge.capacity - self.flow[edge]
-            if residual > 0 and edge not in path and edge.redge not in path:
-                result = self.find_path(edge.sink, sink, path + [edge])
-                if result != None:
-                    return result
+    # original wikipedia version, using DFS
+    # def find_path(self, source, sink ,path):
+    #     if source == sink:
+    #         return path
+    #     for edge in self.get_edges(source):
+    #         residual = edge.capacity - self.flow[edge]
+    #         if residual > 0 and edge not in path and edge.redge not in path:
+    #             result = self.find_path(edge.sink, sink, path + [edge])
+    #             if result != None:
+    #                 return result
+
+    # my implementation of BFS version
+    def find_path(self, source, sink, path):
+        queue = [(source, path)]
+        while queue:
+            (source, path) = queue.pop(0)
+            for edge in self.get_edges(source):
+                residual = edge.capacity - self.flow[edge]
+                if residual > 0 and edge not in path and edge.redge not in path:
+                    if edge.sink == sink:
+                        return path + [edge]
+                    else:
+                        queue.append((edge.sink, path + [edge]))
+
 
     def max_flow(self, source, sink):
         path = self.find_path(source, sink, [])
         while path != None:
             print 'path', path
-            # print 'flow', self.flow
             residuals = [edge.capacity - self.flow[edge] for edge in path]
-            # print 'residual', residuals
             flow = min(residuals)
             for edge in path:
                 self.flow[edge] += flow
                 self.flow[edge.redge] -= flow
-                path = self.find_path(source, sink, [])
+            path = self.find_path(source, sink, [])
+            # print 'flow', self.flow
+
         return sum(self.flow[edge] for edge in self.get_edges(source))
