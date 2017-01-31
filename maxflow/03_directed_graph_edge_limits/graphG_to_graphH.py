@@ -40,7 +40,7 @@ G_nodes = ['S','A','B','C','D','T']
 G_Edges = [ EdgeWithLimit('S','A',20,7), EdgeWithLimit('S','B',10,4),
             EdgeWithLimit('A','B',10,5), EdgeWithLimit('A','C',5, 0),
             EdgeWithLimit('C','B',15,1), EdgeWithLimit('B','D',10,3),
-            EdgeWithLimit('D','C',10,4), EdgeWithLimit('D','T',20,4),
+            EdgeWithLimit('D','C',10,4), EdgeWithLimit('D','T',20,6),
             EdgeWithLimit('C','T',15,2)]
 
 
